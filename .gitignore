@@ -1,1 +1,5 @@
 /input_videos
+/cv_football
+/runs
+yolov8x.pt
+/training/football-players-detection-1
