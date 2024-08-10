@@ -1,5 +1,8 @@
 /input_videos
-/cv_football
+/.venv
 /runs
 yolov8x.pt
 /training/football-players-detection-1
+/models
+training/yolov5mu.pt
+training/yolov5xu.pt
