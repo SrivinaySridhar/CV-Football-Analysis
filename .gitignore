@@ -1,8 +1,9 @@
 /input_videos
 /.venv
 /runs
-yolov8x.pt
 /training/football-players-detection-1
 /models
+/output_videos
+yolov8x.pt
 training/yolov5mu.pt
 training/yolov5xu.pt
