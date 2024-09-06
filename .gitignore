@@ -4,6 +4,9 @@
 /training/football-players-detection-1
 /models
 /output_videos
+/stubs
+**/__pycache__/
+.DS_Store
 yolov8x.pt
 training/yolov5mu.pt
 training/yolov5xu.pt
