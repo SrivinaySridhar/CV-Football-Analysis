@@ -12,9 +12,13 @@ def main():
                                        read_from_stub=True,
                                        stub_path="stubs/track_stubs.pkl")
 
+    # Draw output
+    ## Draw annotations
+    output_video_frames = tracker.draw_annotations(video_frames, tracks)
+
     # Save the video
     output_video_path = "output_videos/output_video.avi"
-    save_video(video_frames, output_video_path)
+    save_video(output_video_frames, output_video_path)
 
 if __name__ == "__main__":
     main()
