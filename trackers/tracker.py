@@ -3,6 +3,7 @@ import supervision as sv
 import pickle
 import os
 import cv2
+import numpy as np
 import sys
 sys.path.append('../')
 from utils import get_bbox_width, get_center_of_bbox
@@ -88,15 +89,17 @@ class Tracker:
         width = get_bbox_width(bbox)
 
         # Draw the ellipse
-        cv2.ellipse(frame, 
-                    center = (x_center, y2), 
-                    axes = (int(width), int(0.35*width)),
-                    angle = 0.0,
-                    startAngle = -45, 
-                    endAngle = 235,
-                    color = color,
-                    thickness = 2,
-                    lineType = cv2.LINE_4)
+        cv2.ellipse(
+            frame, 
+            center = (x_center, y2), 
+            axes = (int(width), int(0.35*width)),
+            angle = 0.0,
+            startAngle = -45, 
+            endAngle = 235,
+            color = color,
+            thickness = 2,
+            lineType = cv2.LINE_4
+        )
         
         rectangle_width = 40
         rectangle_height = 20
@@ -106,11 +109,13 @@ class Tracker:
         y2_rect = (y2 + rectangle_height//2) + 15
 
         if track_id is not None:
-            cv2.rectangle(frame,
-                          pt1 = (int(x1_rect), int(y1_rect)),
-                          pt2 = (int(x2_rect), int(y2_rect)),
-                          color = color,
-                          thickness = cv2.FILLED)
+            cv2.rectangle(
+                frame,
+                pt1 = (int(x1_rect), int(y1_rect)),
+                pt2 = (int(x2_rect), int(y2_rect)),
+                color = color,
+                thickness = cv2.FILLED
+            )
             
             x1_text = x1_rect + 12
             
@@ -121,16 +126,34 @@ class Tracker:
                 x1_text -= 10
             
 
-            cv2.putText(frame,
-                        text = str(track_id),
-                        org = (int(x1_text), int(y1_rect + 15)),
-                        fontFace = cv2.FONT_HERSHEY_SIMPLEX,
-                        fontScale = 0.6,
-                        color = (0, 0, 0),
-                        thickness = 2)
+            cv2.putText(
+                frame,
+                text = str(track_id),
+                org = (int(x1_text), int(y1_rect + 15)),
+                fontFace = cv2.FONT_HERSHEY_SIMPLEX,
+                fontScale = 0.6,
+                color = (0, 0, 0),
+                thickness = 2
+            )
 
         return frame
 
+    def draw_triangle(self, frame, bbox, color):
+        y = int(bbox[1]) #This is the top of the ball
+        x_center, _ = get_center_of_bbox(bbox)
+
+        triangle_points = np.array([
+            [x_center, y],
+            [x_center - 10, y - 20],
+            [x_center + 10, y - 20]
+        ])
+
+        # Draw the triangle
+        cv2.drawContours(frame, [triangle_points], 0, color, cv2.FILLED) 
+        # Draw the border of the triangle
+        cv2.drawContours(frame, [triangle_points], 0, (0, 0, 0), 2)
+
+        return frame
     
     def draw_annotations(self, video_frames, tracks):
         output_video_frames = []
@@ -139,7 +162,7 @@ class Tracker:
 
             player_dict = tracks["players"][frame_num]
             referee_dict = tracks["referees"][frame_num]
-            ball_dict = tracks["ball"][1]
+            ball_dict = tracks["ball"][frame_num]
             
             # Draw Players
             for track_id, player in player_dict.items():
@@ -150,5 +173,9 @@ class Tracker:
                 frame = self.draw_ellipse(frame, referee["bbox"], (0, 255, 255))
 
             output_video_frames.append(frame)
+
+            # Draw Ball
+            for _, ball in ball_dict.items():
+                frame = self.draw_triangle(frame, ball["bbox"], (0, 255, 0))
 
         return output_video_frames
