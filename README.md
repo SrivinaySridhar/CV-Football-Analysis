@@ -5,7 +5,7 @@ player contributions.
 
 ## Project Demo
 
-<video controls src="output_videos/output_video.mp4" title="Demo Output Video"></video>
+https://github.com/user-attachments/assets/d278ae55-0751-4778-bc97-b39d9aea1cd0
 
 ## Key Features  
 - **YOLOv8 for Object Detection**:  
